@@ -43,7 +43,9 @@ async def kashif_scan(
                 )
             hits = await scan_phone(e164)
             out_target = e164
-    except Exception as e:
+    except HTTPException:
+        raise
+    except Exception as e:  # noqa: BLE001
         raise HTTPException(status_code=500, detail=str(e))
 
     # إزالة التكرار

@@ -1,4 +1,6 @@
 """Sitr endpoint — روابط حذف (يستخدم hala-arab)"""
+from __future__ import annotations
+
 from fastapi import APIRouter, Depends, Query, Request
 from hala.utils import load_json
 
