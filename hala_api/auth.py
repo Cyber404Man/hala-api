@@ -1,5 +1,6 @@
 """API key authentication"""
 from fastapi import Header, HTTPException, status
+
 from hala_api.config import settings
 
 

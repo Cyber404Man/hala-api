@@ -1,5 +1,6 @@
 """Health check endpoint"""
 from fastapi import APIRouter
+
 from hala_api.config import settings
 from hala_api.models.schemas import HealthResponse
 

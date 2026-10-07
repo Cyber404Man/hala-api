@@ -1,7 +1,7 @@
 """Pydantic schemas للـAPI"""
-from pydantic import BaseModel, Field, EmailStr
-from typing import Optional
+from __future__ import annotations
 
+from pydantic import BaseModel, Field
 
 # ─── Common ────────────────────────────────────────────
 
@@ -20,10 +20,10 @@ class KashifRequest(BaseModel):
 
 class BreachHit(BaseModel):
     source: str
-    name: Optional[str] = None
-    title: Optional[str] = None
-    date: Optional[str] = None
-    records: Optional[int] = None
+    name: str | None = None
+    title: str | None = None
+    date: str | None = None
+    records: int | None = None
     data_classes: list[str] = []
 
 
