@@ -1,20 +1,28 @@
 """Kashif endpoint — فحص تسريبات (يستخدم hala-arab)"""
-import asyncio
-from fastapi import APIRouter, Depends, HTTPException
+
+from fastapi import APIRouter, Depends, HTTPException, Request
 from hala.commands.kashif import (
-    detect_type, normalize_phone, scan_email, scan_phone,
+    detect_type,
+    normalize_phone,
+    scan_email,
+    scan_phone,
 )
 
 from hala_api.auth import require_api_key
 from hala_api.models.schemas import (
-    KashifRequest, KashifResponse, BreachHit,
+    BreachHit,
+    KashifRequest,
+    KashifResponse,
 )
+from hala_api.rate_limit import limiter
 
 router = APIRouter(prefix="/kashif", tags=["kashif"])
 
 
 @router.post("", response_model=KashifResponse)
+@limiter.limit("30/minute")
 async def kashif_scan(
+    request: Request,
     req: KashifRequest,
     _: str = Depends(require_api_key),
 ) -> KashifResponse:

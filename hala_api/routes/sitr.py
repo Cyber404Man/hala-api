@@ -1,15 +1,18 @@
 """Sitr endpoint — روابط حذف (يستخدم hala-arab)"""
-from fastapi import APIRouter, Depends, Query
+from fastapi import APIRouter, Depends, Query, Request
 from hala.utils import load_json
 
 from hala_api.auth import require_api_key
 from hala_api.models.schemas import SitrResponse, SitrSite
+from hala_api.rate_limit import limiter
 
 router = APIRouter(prefix="/sitr", tags=["sitr"])
 
 
 @router.get("", response_model=SitrResponse)
+@limiter.limit("60/minute")
 async def list_sites(
+    request: Request,
     country: str | None = Query(None),
     type: str | None = Query(None, alias="type"),
     _: str = Depends(require_api_key),

@@ -3,8 +3,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from hala_api.config import settings
+from hala_api.rate_limit import setup_rate_limiting
 from hala_api.routes import health, kashif, nlp, sitr
-
 
 app = FastAPI(
     title=settings.app_name,
@@ -26,6 +26,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Rate limiting
+setup_rate_limiting(app)
+
 # Routes
 app.include_router(health.router)
 app.include_router(kashif.router, prefix=settings.api_prefix)
@@ -41,4 +44,9 @@ async def root():
         "version": settings.app_version,
         "docs": "/docs",
         "health": "/health",
+        "endpoints": [
+            "POST /v1/nlp",
+            "POST /v1/kashif",
+            "GET /v1/sitr",
+        ],
     }

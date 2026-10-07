@@ -1,17 +1,22 @@
 """NLP endpoint — كشف الاحتيال (يستخدم hala-arab)"""
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Request
 from hala.commands.nlp import analyze  # ← الدالة الحقيقية من hala
 
 from hala_api.auth import require_api_key
 from hala_api.models.schemas import (
-    NLPRequest, NLPResponse, NLPHit,
+    NLPHit,
+    NLPRequest,
+    NLPResponse,
 )
+from hala_api.rate_limit import limiter
 
 router = APIRouter(prefix="/nlp", tags=["nlp"])
 
 
 @router.post("", response_model=NLPResponse)
+@limiter.limit("60/minute")
 async def analyze_text(
+    request: Request,
     req: NLPRequest,
     _: str = Depends(require_api_key),
 ) -> NLPResponse:
